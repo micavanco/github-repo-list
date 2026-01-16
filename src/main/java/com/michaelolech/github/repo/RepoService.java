@@ -15,12 +15,24 @@ public class RepoService {
     }
 
     public List<Repo> getRepos(String username) {
-        System.out.println("Getting repos for " + username);
         List<GitHubRepo> gitHubRepos = repoClient.getListOfRepositories(username);
-        System.out.println(gitHubRepos.size());
+        List<Repo> repos = new ArrayList<>();
 
-        return gitHubRepos.stream()
-                .map(repo -> new Repo(repo.name(), repo.owner().login(), new ArrayList<>()))
-                .toList();
+        if (gitHubRepos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        for (GitHubRepo gitHubRepo : gitHubRepos) {
+            List<GitHubBranch> branches = repoClient
+                    .getListOfBranches(gitHubRepo.owner().login(), gitHubRepo.name());
+            List<RepoBranch> reposBranches = branches
+                    .stream()
+                    .map((b) -> new RepoBranch(b.name(), b.commit().sha())).toList();
+            Repo repo = new Repo(gitHubRepo.name(), gitHubRepo.owner().login(), reposBranches);
+
+            repos.add(repo);
+        }
+
+        return repos;
     }
 }

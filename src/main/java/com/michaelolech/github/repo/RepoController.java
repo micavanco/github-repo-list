@@ -29,6 +29,11 @@ public class RepoController {
                     new UserNotFoundResponse(e.getStatus().value(), e.getMessage()),
                     HttpStatus.NOT_FOUND
             );
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(
+                    e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
         }
 
         return repos != null ?
