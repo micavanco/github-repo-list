@@ -22,7 +22,9 @@ public class RepoService {
             return Collections.emptyList();
         }
 
-        for (GitHubRepo gitHubRepo : gitHubRepos) {
+        List<GitHubRepo> filteredRepos = gitHubRepos.stream().filter(r -> !r.fork()).toList();
+
+        for (GitHubRepo gitHubRepo : filteredRepos) {
             List<GitHubBranch> branches = repoClient
                     .getListOfBranches(gitHubRepo.owner().login(), gitHubRepo.name());
             List<RepoBranch> reposBranches = branches

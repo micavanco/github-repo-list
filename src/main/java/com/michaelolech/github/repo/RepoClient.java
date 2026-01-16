@@ -1,5 +1,8 @@
 package com.michaelolech.github.repo;
 
+import com.michaelolech.github.config.RepoBaseUrl;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -9,12 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@EnableConfigurationProperties(RepoBaseUrl.class)
 public class RepoClient {
     private final RestClient restClient;
 
-    public RepoClient() {
+    public RepoClient(RepoBaseUrl urlProperties) {
         this.restClient = RestClient.builder()
-                .baseUrl("https://api.github.com")
+                .baseUrl(urlProperties.baseUrl())
                 .build();
     }
 
