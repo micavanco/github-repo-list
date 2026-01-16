@@ -1,4 +1,4 @@
-package com.michaelolech.github_repo_list;
+package com.michaelolech.github;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

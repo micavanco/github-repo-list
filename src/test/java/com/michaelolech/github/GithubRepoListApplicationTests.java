@@ -1,4 +1,4 @@
-package com.michaelolech.github_repo_list;
+package com.michaelolech.github;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
