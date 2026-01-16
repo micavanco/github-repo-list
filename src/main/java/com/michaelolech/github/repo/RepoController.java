@@ -1,5 +1,7 @@
 package com.michaelolech.github.repo;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,11 +12,26 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/repos")
 public class RepoController {
+    private final RepoService repoService;
 
-    @GetMapping("/{userName}")
-    public List<Repo> getListOfRepositoriesByUserName(@PathVariable String userName) {
-        return List.of(
-                new Repo("Test", userName, List.of(new Branch("init", "12321")))
-        );
+    public RepoController(RepoService repoService) {
+        this.repoService = repoService;
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> getListOfRepositoriesByUserName(@PathVariable String username) {
+        List<Repo> repos;
+
+        try {
+            repos = repoService.getRepos(username);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(
+                    new UserNotFoundResponse(e.getStatus().value(), e.getMessage()),
+                    HttpStatus.NOT_FOUND
+            );
+        }
+
+        return repos != null ?
+                ResponseEntity.ok(repos) : ResponseEntity.notFound().build();
     }
 }
