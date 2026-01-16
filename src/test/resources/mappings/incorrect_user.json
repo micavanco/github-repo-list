@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/users/incorrect_test/repos"
+  },
+  "response": {
+    "status": 404
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathTemplate": "/repos/{username}/{repoName}/branches"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": [
+      {
+        "name": "feature-two",
+        "commit": {
+          "sha": "96d45d86f677f645c064fcc1e38b0ecd0bd2f0a7",
+          "url": "https://api.github.com/repos/szymon/Financial-Models-Numerical-Methods/commits/96d45d86f677f11bc064fcc1e38b0ecd0bd2f0a7"
+        },
+        "protected": false
+      },
+      {
+        "name": "feature-one",
+        "commit": {
+          "sha": "96d45d86f677f11bc064fcc1e75670ecd0bd2f0a7",
+          "url": "https://api.github.com/repos/szymon/Financial-Models-Numerical-Methods/commits/96d45d86f677f11bc064fcc1e38b0ecd0bd2f0a7"
+        },
+        "protected": false
+      },
+      {
+        "name": "dev",
+        "commit": {
+          "sha": "987845d86f677f11bc064fcc1e38b0ecd0bd2f0345",
+          "url": "https://api.github.com/repos/szymon/Financial-Models-Numerical-Methods/commits/96d45d86f677f11bc064fcc1e38b0ecd0bd2f0a7"
+        },
+        "protected": false
+      },
+      {
+        "name": "master",
+        "commit": {
+          "sha": "96d45d86f677f11bc064fcc1e38b0ecd0bd2f0a7",
+          "url": "https://api.github.com/repos/szymon/Financial-Models-Numerical-Methods/commits/96d45d86f677f11bc064fcc1e38b0ecd0bd2f0a7"
+        },
+        "protected": false
+      }
+    ]
+  }
+}
