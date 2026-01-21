@@ -1,14 +1,12 @@
 package com.michaelolech.github.repo;
 
 import com.michaelolech.github.config.RepoBaseUrl;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -34,7 +32,12 @@ public class RepoClient {
                     }
                     else {
                         GitHubRepo[] repos = response.bodyTo(GitHubRepo[].class);
-                        return repos != null ? List.of(repos) : new ArrayList<>();
+
+                        if (repos == null) {
+                            throw new RuntimeException("Cannot parse response.");
+                        }
+
+                        return List.of(repos);
                     }
                 });
     }
@@ -49,7 +52,12 @@ public class RepoClient {
                     }
                     else {
                         GitHubBranch[] branches = response.bodyTo(GitHubBranch[].class);
-                        return branches != null ? List.of(branches) : new ArrayList<>();
+
+                        if (branches == null) {
+                            throw new RuntimeException("Cannot parse response.");
+                        }
+
+                        return List.of(branches);
                     }
                 });
     }
