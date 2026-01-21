@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/repos")
+@RequestMapping(value = "/api/{version}/repos", version = "v1")
 public class RepoController {
     private final RepoService repoService;
 
