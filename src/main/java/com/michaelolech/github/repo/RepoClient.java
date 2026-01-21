@@ -1,7 +1,5 @@
 package com.michaelolech.github.repo;
 
-import com.michaelolech.github.config.RepoBaseUrl;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -10,17 +8,14 @@ import org.springframework.web.client.RestClient;
 import java.util.List;
 
 @Component
-@EnableConfigurationProperties(RepoBaseUrl.class)
 public class RepoClient {
     private final RestClient restClient;
 
-    public RepoClient(RepoBaseUrl urlProperties) {
-        this.restClient = RestClient.builder()
-                .baseUrl(urlProperties.baseUrl())
-                .build();
+    public RepoClient(RestClient restClient) {
+        this.restClient = restClient;
     }
 
-    public List<GitHubRepo> getListOfRepositories(String username) {
+    public List<GitHubRepo> getListOfRepositories(final String username) {
         return restClient.get()
                 .uri("/users/{username}/repos", username)
                 .accept(MediaType.APPLICATION_JSON)
@@ -42,7 +37,7 @@ public class RepoClient {
                 });
     }
 
-    public List<GitHubBranch> getListOfBranches(String username, String repoName) {
+    public List<GitHubBranch> getListOfBranches(final String username, final String repoName) {
         return restClient.get()
                 .uri("/repos/{username}/{repoName}/branches", username, repoName)
                 .accept(MediaType.APPLICATION_JSON)
