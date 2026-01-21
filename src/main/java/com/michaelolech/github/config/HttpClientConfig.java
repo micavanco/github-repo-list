@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.support.RestClientAdapter;
+import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import org.springframework.web.service.registry.ImportHttpServices;
 
 @Configuration
@@ -15,8 +17,8 @@ import org.springframework.web.service.registry.ImportHttpServices;
 public class HttpClientConfig {
 
     @Bean
-    RestClient restClient(RestClient.Builder builder, RepoBaseUrl urlProperties) {
-        return builder
+    RepoHttpClient restClient(RestClient.Builder builder, RepoBaseUrl urlProperties) {
+        var restClient = builder
                 .baseUrl(urlProperties.baseUrl())
                 .defaultStatusHandler(
                         status -> status.value() == 404,
@@ -37,5 +39,9 @@ public class HttpClientConfig {
                         }
                 )
                 .build();
+
+        return HttpServiceProxyFactory
+                .builderFor(RestClientAdapter.create(restClient))
+                .build().createClient(RepoHttpClient.class);
     }
 }
