@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.StructuredTaskScope;
 
 @Service
 public class RepoService {
@@ -24,17 +25,32 @@ public class RepoService {
 
         List<GitHubRepo> filteredRepos = gitHubRepos.stream().filter(r -> !r.fork()).toList();
 
-        for (GitHubRepo gitHubRepo : filteredRepos) {
-            List<GitHubBranch> branches = repoClient
-                    .getListOfBranches(gitHubRepo.owner().login(), gitHubRepo.name());
-            List<RepoBranch> reposBranches = branches
-                    .stream()
-                    .map((b) -> new RepoBranch(b.name(), b.commit().sha())).toList();
-            Repo repo = new Repo(gitHubRepo.name(), gitHubRepo.owner().login(), reposBranches);
+        try (var scope = StructuredTaskScope.open()) {
 
-            repos.add(repo);
+            var tasks = filteredRepos.stream().map(repo ->
+                        scope.fork(() -> {
+                            var branches = repoClient.getListOfBranches(repo.owner().login(), repo.name());
+
+                            List<RepoBranch> reposBranches = branches
+                                    .stream()
+                                    .map((b) -> new RepoBranch(b.name(), b.commit().sha())).toList();
+
+                            return new Repo(repo.name(), repo.owner().login(), reposBranches);
+                        })
+                    )
+                    .toList();
+
+            scope.join();
+
+            for (var t : tasks) {
+                if (t.state() == StructuredTaskScope.Subtask.State.SUCCESS) {
+                    repos.add(t.get());
+                }
+            }
+
+            return repos;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-
-        return repos;
     }
 }

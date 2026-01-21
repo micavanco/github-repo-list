@@ -32,3 +32,9 @@ tasks.withType<Test> {
 	environment("spring.profiles.active", "test")
 	useJUnitPlatform()
 }
+
+tasks.withType<JavaCompile> {
+	allprojects {
+		options.compilerArgs.add("--enable-preview")
+	}
+}
